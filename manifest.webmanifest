@@ -1,0 +1,17 @@
+{
+  "name": "120 Degreez Project Manager",
+  "short_name": "120 Degreez",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f3ee",
+  "theme_color": "#d90445",
+  "description": "Offline-capable project manager PWA for iPhone and mobile Safari.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

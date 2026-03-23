@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#d90445">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="120 Degreez">
+  <title>120 Degreez Project Manager</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="brand-mark">120</div>
+      <div class="brand-copy">
+        <p class="eyebrow">iPhone Ready PWA</p>
+        <h1>120 Degreez Project Manager</h1>
+        <p class="company-line">+1 619 323 1515</p>
+        <p class="company-line">www.120degreez.com</p>
+        <p class="company-line">225 Broadway St, Suite 350, San Diego, CA 92101</p>
+      </div>
+    </header>
+
+    <section class="dashboard" aria-label="Project overview">
+      <article class="card">
+        <span class="card-label">Total Projects</span>
+        <strong class="card-value" id="dashTotal">0</strong>
+        <span class="card-sub">Loaded in this device</span>
+      </article>
+      <article class="card">
+        <span class="card-label">Favorites</span>
+        <strong class="card-value" id="dashFav">0</strong>
+        <span class="card-sub">Saved offline</span>
+      </article>
+      <article class="card">
+        <span class="card-label">Recent</span>
+        <strong class="card-value" id="dashRecent">None</strong>
+        <span class="card-sub">Latest opened project</span>
+      </article>
+      <article class="card">
+        <span class="card-label">Selected</span>
+        <strong class="card-value" id="dashSelected">None</strong>
+        <span class="card-sub">Current project row</span>
+      </article>
+    </section>
+
+    <section class="toolbar">
+      <div class="toolbar-group">
+        <label class="toolbar-title" for="searchBox">Project Search</label>
+        <div class="search-wrap">
+          <input id="searchBox" type="search" placeholder="Search by number, name, or path">
+          <button id="clearSearchBtn" class="icon-btn" type="button" aria-label="Clear search">×</button>
+        </div>
+      </div>
+      <div class="toolbar-group toolbar-actions">
+        <span class="toolbar-title">Actions</span>
+        <div class="button-row">
+          <button id="favOnlyBtn" class="toggle-btn" type="button">Favorites Only</button>
+          <button id="themeBtn" class="btn subtle" type="button">Dark Mode</button>
+          <button id="syncSheetBtn" class="btn" type="button">Sync Google Sheet</button>
+          <label class="btn blue file-btn" for="csvInput">Import CSV</label>
+          <input id="csvInput" type="file" accept=".csv,text/csv">
+          <button id="exportFilteredBtn" class="btn blue" type="button">Export Filtered</button>
+          <button id="exportAllBtn" class="btn green" type="button">Export All</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="meta">
+      <span id="projectCount">0 projects</span>
+      <span id="recentPill" class="pill">Ready</span>
+    </section>
+
+    <section class="note-banner" id="noteBanner">
+      Tap <strong>Sync Google Sheet</strong> to load the latest project info from your shared sheet. The app keeps a local copy on the iPhone for offline use. Windows folder paths are shown as text only.
+    </section>
+
+    <section class="list-panel">
+      <div class="list-header desktop-only">
+        <span>Fav</span>
+        <button class="sort-btn" data-sort="number" type="button">Project Number</button>
+        <button class="sort-btn" data-sort="name" type="button">Project Name</button>
+        <button class="sort-btn" data-sort="path" type="button">Project Path</button>
+        <span>Actions</span>
+      </div>
+      <div id="projectList" class="project-list" aria-live="polite"></div>
+    </section>
+
+    <section class="editor">
+      <div class="panel-header">
+        <div>
+          <h2>Project Editor</h2>
+          <p class="panel-copy">Add, update, or remove projects from the offline working copy.</p>
+        </div>
+        <span id="editModeText" class="mode-badge">Add Mode</span>
+      </div>
+      <div class="form-grid">
+        <label>
+          <span>Project Number</span>
+          <input id="projNumber" class="field" type="text" autocomplete="off">
+        </label>
+        <label>
+          <span>Project Name</span>
+          <input id="projName" class="field" type="text" autocomplete="off">
+        </label>
+        <label class="full-width">
+          <span>Project Path or URL</span>
+          <input id="projPath" class="field" type="text" autocomplete="off">
+        </label>
+      </div>
+      <div class="actions">
+        <button id="addBtn" class="btn" type="button">Add Project</button>
+        <button id="updateBtn" class="btn blue" type="button" disabled>Update</button>
+        <button id="clearBtn" class="btn subtle" type="button">Clear</button>
+      </div>
+      <p id="statusMsg" class="status" hidden></p>
+    </section>
+  </div>
+
+  <template id="projectRowTemplate">
+    <article class="project-row">
+      <button class="favorite-btn" type="button" aria-label="Toggle favorite">☆</button>
+      <div class="project-main">
+        <div class="row-top">
+          <strong class="project-number"></strong>
+          <span class="project-name"></span>
+        </div>
+        <p class="project-path"></p>
+      </div>
+      <div class="row-actions">
+        <button class="btn small open-btn" type="button">Open</button>
+        <button class="btn subtle small copy-btn" type="button">Copy</button>
+        <button class="btn subtle small edit-btn" type="button">Edit</button>
+        <button class="btn warn small delete-btn" type="button">Delete</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
