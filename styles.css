@@ -379,16 +379,35 @@ input {
 }
 
 @media (max-width: 640px) {
+  html,
+  body {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body {
+    overscroll-behavior: none;
+  }
+
+  .app-shell {
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
+    gap: 8px;
+    overflow: hidden;
+  }
+
   .header {
-    grid-template-columns: 54px 1fr;
-    gap: 10px;
-    padding: 12px;
+    grid-template-columns: 68px 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+    align-items: center;
   }
 
   .brand-mark {
-    width: 54px;
-    height: 54px;
-    border-radius: 16px;
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
   }
 
   .toolbar-title,
@@ -398,84 +417,148 @@ input {
   }
 
   .brand-copy h1 {
-    font-size: 1.72rem;
-    margin-bottom: 7px;
+    font-size: 1.45rem;
+    margin-bottom: 6px;
+    line-height: 1;
   }
 
   .company-line {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    margin-bottom: 3px;
   }
 
   .dashboard {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 2px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0;
+    overflow: visible;
+    padding-bottom: 0;
   }
 
   .card {
-    min-width: 116px;
-    flex: 0 0 116px;
-    min-height: 78px;
-    padding: 9px 10px;
+    min-width: 0;
+    min-height: 68px;
+    padding: 8px 9px;
   }
 
   .card-value {
-    font-size: 0.96rem;
+    font-size: 0.88rem;
+    margin-top: 3px;
   }
 
   .card-sub {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
+    margin-top: 2px;
   }
 
   .toolbar {
-    gap: 10px;
-    padding: 11px 12px;
+    gap: 8px;
+    padding: 10px 12px;
   }
 
   #searchBox {
-    min-height: 42px;
-    font-size: 0.92rem;
+    min-height: 40px;
+    font-size: 0.9rem;
+    padding: 9px 34px 9px 12px;
   }
 
   .button-row {
-    gap: 7px;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
   }
 
   .btn,
   .toggle-btn,
   .file-btn {
-    min-height: 35px;
+    min-height: 34px;
     padding: 7px 10px;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .meta {
+    margin: 0;
+  }
+
+  .pill {
+    font-size: 0.7rem;
   }
 
   .note-banner {
-    font-size: 0.8rem;
+    display: none;
+  }
+
+  .list-panel {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-list {
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .project-row {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 10px 11px;
+    align-items: center;
+  }
+
+  .favorite-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.92rem;
+  }
+
+  .project-number {
+    font-size: 0.92rem;
+  }
+
+  .project-name {
+    font-size: 0.82rem;
   }
 
   .project-path {
+    font-size: 0.74rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .row-actions {
+    justify-content: flex-end;
+  }
+
+  .btn.small {
+    min-width: 60px;
+    min-height: 30px;
+    padding: 6px 9px;
+    font-size: 0.76rem;
+  }
 }
 
 @media (max-width: 420px) {
   .header {
-    grid-template-columns: 50px 1fr;
-    padding: 11px;
+    grid-template-columns: 64px 1fr;
+    padding: 11px 12px;
   }
 
   .brand-mark {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
+    width: 64px;
+    height: 64px;
+    border-radius: 17px;
   }
 
   .brand-copy h1 {
-    font-size: 1.6rem;
+    font-size: 1.34rem;
   }
 
   .project-row {
@@ -485,6 +568,6 @@ input {
   .row-actions {
     grid-column: 2;
     justify-content: flex-start;
-    margin-top: 5px;
+    margin-top: 6px;
   }
 }
