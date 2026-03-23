@@ -27,6 +27,7 @@ function initApp() {
   applyTheme();
   render();
   registerServiceWorker();
+
   if (!state.allProjects.length) {
     syncFromGoogleSheet({ silentOnFailure: true });
   }
@@ -77,14 +78,17 @@ function bindEvents() {
   els.csvInput.addEventListener("change", importCsvFromFile);
   els.exportFilteredBtn.addEventListener("click", () => exportCsv(state.currentItems, "filtered"));
   els.exportAllBtn.addEventListener("click", () => exportCsv(state.allProjects, "all"));
+
   document.querySelectorAll("[data-sort]").forEach((button) => {
     button.addEventListener("click", () => toggleSort(button.dataset.sort));
   });
+
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
       syncFromGoogleSheet({ silentOnFailure: true });
     }
   });
+
   window.addEventListener("focus", () => {
     syncFromGoogleSheet({ silentOnFailure: true });
   });
@@ -105,15 +109,17 @@ function loadPrefs() {
 }
 
 function savePrefs() {
-  const prefs = {
-    darkMode: state.darkMode,
-    favorites: state.favorites,
-    recentProjects: state.recentProjects,
-    favoritesOnly: state.favoritesOnly,
-    sortField: state.sortField,
-    sortAsc: state.sortAsc,
-  };
-  localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+  localStorage.setItem(
+    PREFS_KEY,
+    JSON.stringify({
+      darkMode: state.darkMode,
+      favorites: state.favorites,
+      recentProjects: state.recentProjects,
+      favoritesOnly: state.favoritesOnly,
+      sortField: state.sortField,
+      sortAsc: state.sortAsc,
+    })
+  );
 }
 
 function loadProjects() {
@@ -198,20 +204,7 @@ function importCsvFromFile(event) {
   const reader = new FileReader();
   reader.onload = () => {
     const rows = parseCsv(String(reader.result || ""));
-    const projects = [];
-
-    for (let i = 1; i < rows.length; i += 1) {
-      const row = rows[i];
-      if (!row || row.length < 3) {
-        continue;
-      }
-      projects.push({
-        number: row[0].trim(),
-        name: row[1].trim(),
-        path: row[2].trim(),
-      });
-    }
-
+    const projects = rowsToProjects(rows.slice(1));
     state.allProjects = projects;
     state.selectedIndex = -1;
     saveProjects();
@@ -229,7 +222,6 @@ async function syncFromGoogleSheet(options = {}) {
     showStatus("Loading projects from Google Sheets...", "warn");
     const rows = await loadGoogleSheetRows();
     const projects = rowsToProjects(rows);
-
     state.allProjects = projects;
     state.selectedIndex = -1;
     saveProjects();
@@ -275,9 +267,9 @@ function loadGoogleSheetRows() {
           return;
         }
 
-        const rows = table.rows.map((row) => (
+        const rows = table.rows.map((row) =>
           (row.c || []).map((cell) => (cell && cell.v != null ? String(cell.v) : ""))
-        ));
+        );
         resolve(rows);
       } catch (error) {
         reject(error);
@@ -288,6 +280,7 @@ function loadGoogleSheetRows() {
       cleanup();
       reject(new Error("Unable to load Google Sheets script"));
     };
+
     script.src = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?gid=${GOOGLE_SHEET_GID}&headers=1&tqx=responseHandler:${callbackName}`;
     document.body.appendChild(script);
   });
@@ -307,9 +300,9 @@ function rowsToProjects(rows) {
 function exportCsv(items, label) {
   const content = [
     "Project Number,Project Name,Project Path",
-    ...items.map((project) => (
+    ...items.map((project) =>
       `${csvEscape(project.number)},${csvEscape(project.name)},${csvEscape(project.path)}`
-    )),
+    ),
   ].join("\r\n");
 
   const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
@@ -372,10 +365,12 @@ function fuzzyScore(project, query) {
     if (!part) {
       return score;
     }
+
     const index = haystack.indexOf(part);
     if (index < 0) {
       return -1;
     }
+
     return score + 100 - Math.min(index, 90);
   }, 0);
 }
@@ -407,14 +402,17 @@ function renderList() {
   state.currentItems.forEach((project, filteredIndex) => {
     const node = template.content.firstElementChild.cloneNode(true);
     const key = favoriteKey(project);
+    const favoriteBtn = node.querySelector(".favorite-btn");
+    const copyBtn = node.querySelector(".copy-btn");
+
     node.classList.toggle("selected", filteredIndex === state.selectedIndex);
     node.querySelector(".project-number").textContent = project.number;
     node.querySelector(".project-name").textContent = project.name;
     node.querySelector(".project-path").textContent = project.path;
 
-    const favoriteBtn = node.querySelector(".favorite-btn");
     favoriteBtn.textContent = state.favorites[key] ? "★" : "☆";
-    favoriteBtn.addEventListener("click", () => {
+    favoriteBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
       state.favorites[key] = !state.favorites[key];
       savePrefs();
       render();
@@ -422,14 +420,12 @@ function renderList() {
 
     node.addEventListener("click", () => {
       state.selectedIndex = filteredIndex;
+      rememberRecent(project);
+      savePrefs();
       render();
     });
 
-    node.querySelector(".open-btn").addEventListener("click", (event) => {
-      event.stopPropagation();
-      openProject(project, filteredIndex);
-    });
-    node.querySelector(".copy-btn").addEventListener("click", async (event) => {
+    copyBtn.addEventListener("click", async (event) => {
       event.stopPropagation();
       await copyText(project.path);
     });
@@ -467,6 +463,7 @@ function toggleSort(field) {
     state.sortField = field;
     state.sortAsc = true;
   }
+
   savePrefs();
   render();
   showStatus(`Sorted by ${field}.`, "success");
@@ -474,7 +471,7 @@ function toggleSort(field) {
 
 function showStatus(message, kind = "") {
   els.statusMsg.hidden = !message;
-  els.statusMsg.className = `status ${kind}`.trim();
+  els.statusMsg.className = `status global-status ${kind}`.trim();
   els.statusMsg.textContent = message;
 }
 
