@@ -16,7 +16,6 @@
     <header class="header">
       <img class="brand-mark" src="./logo.png" alt="120 Degreez logo">
       <div class="brand-copy">
-        <p class="eyebrow">iPhone Ready PWA</p>
         <h1>120 Degreez Project Manager</h1>
         <p class="company-line">+1 619 323 1515</p>
         <p class="company-line">www.120degreez.com</p>
@@ -28,22 +27,22 @@
       <article class="card">
         <span class="card-label">Total Projects</span>
         <strong class="card-value" id="dashTotal">0</strong>
-        <span class="card-sub">Loaded in this device</span>
+        <span class="card-sub">Loaded</span>
       </article>
       <article class="card">
         <span class="card-label">Favorites</span>
         <strong class="card-value" id="dashFav">0</strong>
-        <span class="card-sub">Saved offline</span>
+        <span class="card-sub">Saved</span>
       </article>
       <article class="card">
         <span class="card-label">Recent</span>
         <strong class="card-value" id="dashRecent">None</strong>
-        <span class="card-sub">Latest opened project</span>
+        <span class="card-sub">Latest opened</span>
       </article>
       <article class="card">
         <span class="card-label">Selected</span>
         <strong class="card-value" id="dashSelected">None</strong>
-        <span class="card-sub">Current project row</span>
+        <span class="card-sub">Current row</span>
       </article>
     </section>
 
@@ -51,8 +50,8 @@
       <div class="toolbar-group">
         <label class="toolbar-title" for="searchBox">Project Search</label>
         <div class="search-wrap">
-          <input id="searchBox" type="search" placeholder="Search by number, name, or path">
-          <button id="clearSearchBtn" class="icon-btn" type="button" aria-label="Clear search">×</button>
+          <input id="searchBox" type="search" placeholder="Search projects">
+          <button id="clearSearchBtn" class="icon-btn" type="button" aria-label="Clear search">x</button>
         </div>
       </div>
       <div class="toolbar-group toolbar-actions">
@@ -62,10 +61,10 @@
           <button id="themeBtn" class="btn subtle" type="button">Dark Mode</button>
           <button id="syncSheetBtn" class="btn" type="button">Sync Google Sheet</button>
           <label class="btn blue file-btn" for="csvInput">Import CSV</label>
-          <input id="csvInput" type="file" accept=".csv,text/csv">
           <button id="exportFilteredBtn" class="btn blue" type="button">Export Filtered</button>
           <button id="exportAllBtn" class="btn green" type="button">Export All</button>
         </div>
+        <input id="csvInput" type="file" accept=".csv,text/csv">
       </div>
     </section>
 
