@@ -71,6 +71,7 @@ input {
   grid-template-columns: 88px 1fr;
   gap: 14px;
   padding: 18px;
+  align-items: start;
 }
 
 .brand-mark {
@@ -93,6 +94,11 @@ input {
 .brand-copy h1,
 .panel-header h2 {
   margin: 4px 0 8px;
+}
+
+.brand-copy h1 {
+  line-height: 1.02;
+  text-wrap: balance;
 }
 
 .company-line,
@@ -168,6 +174,7 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-items: stretch;
 }
 
 .btn,
@@ -368,5 +375,212 @@ input {
   .meta {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding:
+      calc(env(safe-area-inset-top) + 12px)
+      10px
+      calc(env(safe-area-inset-bottom) + 20px);
+  }
+
+  .header,
+  .toolbar,
+  .list-panel,
+  .note-banner,
+  .card {
+    border-radius: 18px;
+  }
+
+  .header {
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .brand-mark {
+    width: 72px;
+    height: 72px;
+    border-radius: 22px;
+  }
+
+  .eyebrow,
+  .toolbar-title,
+  .card-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .brand-copy h1 {
+    margin: 2px 0 10px;
+    font-size: clamp(2rem, 8vw, 2.7rem);
+    line-height: 0.98;
+  }
+
+  .company-line {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .dashboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .card {
+    padding: 14px 14px 12px;
+    min-height: 118px;
+  }
+
+  .card-value {
+    margin-top: 10px;
+    font-size: 1.15rem;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+
+  .card-sub {
+    margin-top: 8px;
+    line-height: 1.25;
+  }
+
+  .toolbar {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  #searchBox {
+    min-height: 56px;
+    padding: 14px 42px 14px 16px;
+    font-size: 1rem;
+  }
+
+  .icon-btn {
+    right: 10px;
+  }
+
+  .button-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .btn,
+  .toggle-btn,
+  .file-btn {
+    width: 100%;
+    min-height: 52px;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 10px;
+    font-size: 0.98rem;
+  }
+
+  .meta {
+    gap: 6px;
+    margin: 10px 0;
+  }
+
+  .pill {
+    align-self: flex-end;
+  }
+
+  .note-banner {
+    padding: 14px;
+    font-size: 0.98rem;
+    line-height: 1.45;
+  }
+
+  .project-row {
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .favorite-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
+
+  .project-main {
+    min-width: 0;
+  }
+
+  .row-top {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 10px;
+    align-items: start;
+  }
+
+  .project-number {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .project-name {
+    font-size: 1rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .project-path {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .row-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+    margin-top: 2px;
+  }
+
+  .btn.small {
+    width: auto;
+    min-width: 104px;
+    min-height: 46px;
+    padding: 10px 16px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .header {
+    grid-template-columns: 64px 1fr;
+    padding: 14px;
+  }
+
+  .brand-mark {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+  }
+
+  .brand-copy h1 {
+    font-size: 1.85rem;
+  }
+
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr;
+  }
+
+  .row-top {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .row-actions {
+    grid-column: 1 / -1;
   }
 }
