@@ -8,7 +8,6 @@ const state = {
   favorites: {},
   recentProjects: [],
   selectedIndex: -1,
-  editIndex: -1,
   darkMode: false,
   favoritesOnly: false,
   sortField: "",
@@ -49,13 +48,6 @@ function bindElements() {
     "dashFav",
     "dashRecent",
     "dashSelected",
-    "projNumber",
-    "projName",
-    "projPath",
-    "addBtn",
-    "updateBtn",
-    "clearBtn",
-    "editModeText",
     "statusMsg",
   ].forEach((id) => {
     els[id] = document.getElementById(id);
@@ -84,12 +76,6 @@ function bindEvents() {
   els.csvInput.addEventListener("change", importCsvFromFile);
   els.exportFilteredBtn.addEventListener("click", () => exportCsv(state.currentItems, "filtered"));
   els.exportAllBtn.addEventListener("click", () => exportCsv(state.allProjects, "all"));
-  els.addBtn.addEventListener("click", addProject);
-  els.updateBtn.addEventListener("click", updateProject);
-  els.clearBtn.addEventListener("click", clearForm);
-  [els.projNumber, els.projName, els.projPath].forEach((input) => {
-    input.addEventListener("input", updateFormState);
-  });
   document.querySelectorAll("[data-sort]").forEach((button) => {
     button.addEventListener("click", () => toggleSort(button.dataset.sort));
   });
@@ -227,10 +213,8 @@ function importCsvFromFile(event) {
 
     state.allProjects = projects;
     state.selectedIndex = -1;
-    state.editIndex = -1;
     saveProjects();
     render();
-    clearForm();
     showStatus(`Imported ${projects.length} projects from CSV.`, "success");
     els.csvInput.value = "";
   };
@@ -270,10 +254,8 @@ async function syncFromGoogleSheet(options = {}) {
 
     state.allProjects = projects;
     state.selectedIndex = -1;
-    state.editIndex = -1;
     saveProjects();
     render();
-    clearForm();
     showStatus(`Synced ${projects.length} projects from Google Sheets.`, "success");
   } catch (error) {
     console.warn("Google Sheets sync failed", error);
@@ -372,7 +354,6 @@ function render() {
   renderList();
   renderDashboard();
   applyTheme();
-  updateFormState();
 }
 
 function renderList() {
@@ -385,7 +366,7 @@ function renderList() {
     empty.className = "empty-state";
     empty.textContent = state.allProjects.length
       ? "No matching project found."
-      : "No projects loaded yet. Import your CSV to start using the PWA.";
+      : "No projects loaded yet. Tap Sync Google Sheet to load your shared project list.";
     els.projectList.appendChild(empty);
     return;
   }
@@ -421,14 +402,6 @@ function renderList() {
       event.stopPropagation();
       await copyText(project.path);
     });
-    node.querySelector(".edit-btn").addEventListener("click", (event) => {
-      event.stopPropagation();
-      startEdit(project);
-    });
-    node.querySelector(".delete-btn").addEventListener("click", (event) => {
-      event.stopPropagation();
-      deleteProject(project);
-    });
 
     els.projectList.appendChild(node);
   });
@@ -440,28 +413,6 @@ function renderDashboard() {
   els.dashFav.textContent = String(favCount);
   els.dashRecent.textContent = state.recentProjects[0] || "None";
   els.dashSelected.textContent = state.currentItems[state.selectedIndex]?.number || "None";
-}
-
-function openProject(project, filteredIndex) {
-  rememberRecent(project);
-  state.selectedIndex = filteredIndex;
-  savePrefs();
-  render();
-
-  if (/^https?:\/\//i.test(project.path)) {
-    window.open(project.path, "_blank", "noopener,noreferrer");
-    showStatus(`Opened ${project.number}.`, "success");
-    return;
-  }
-
-  if (navigator.share) {
-    navigator.share({
-      title: `${project.number} - ${project.name}`,
-      text: project.path,
-    }).catch(() => {});
-  }
-
-  copyText(project.path, `Copied path for ${project.number}.`);
 }
 
 function rememberRecent(project) {
@@ -476,104 +427,6 @@ async function copyText(text, successMessage = "Copied to clipboard.") {
   } catch (error) {
     showStatus("Clipboard access failed on this device.", "warn");
   }
-}
-
-function startEdit(project) {
-  state.editIndex = state.allProjects.findIndex((entry) => (
-    entry.number === project.number &&
-    entry.name === project.name &&
-    entry.path === project.path
-  ));
-
-  if (state.editIndex < 0) {
-    showStatus("Unable to find the selected project.", "error");
-    return;
-  }
-
-  els.projNumber.value = state.allProjects[state.editIndex].number;
-  els.projName.value = state.allProjects[state.editIndex].name;
-  els.projPath.value = state.allProjects[state.editIndex].path;
-  els.editModeText.textContent = "Edit Mode";
-  updateFormState();
-  showStatus("Project loaded for editing.", "success");
-}
-
-function clearForm() {
-  els.projNumber.value = "";
-  els.projName.value = "";
-  els.projPath.value = "";
-  state.editIndex = -1;
-  els.editModeText.textContent = "Add Mode";
-  updateFormState();
-}
-
-function readFormProject() {
-  return {
-    number: els.projNumber.value.trim(),
-    name: els.projName.value.trim(),
-    path: els.projPath.value.trim(),
-  };
-}
-
-function validateProject(project) {
-  if (!project.number || !project.name || !project.path) {
-    showStatus("Project number, name, and path are required.", "error");
-    return false;
-  }
-  return true;
-}
-
-function addProject() {
-  const project = readFormProject();
-  if (!validateProject(project)) {
-    return;
-  }
-  state.allProjects.push(project);
-  saveProjects();
-  clearForm();
-  render();
-  showStatus("Project added successfully.", "success");
-}
-
-function updateProject() {
-  if (state.editIndex < 0) {
-    showStatus("Select a project to edit first.", "warn");
-    return;
-  }
-  const project = readFormProject();
-  if (!validateProject(project)) {
-    return;
-  }
-  state.allProjects[state.editIndex] = project;
-  saveProjects();
-  clearForm();
-  render();
-  showStatus("Project updated successfully.", "success");
-}
-
-function deleteProject(project) {
-  const matchIndex = state.allProjects.findIndex((entry) => (
-    entry.number === project.number &&
-    entry.name === project.name &&
-    entry.path === project.path
-  ));
-
-  if (matchIndex < 0) {
-    showStatus("Unable to find the selected project.", "error");
-    return;
-  }
-
-  state.allProjects.splice(matchIndex, 1);
-  saveProjects();
-  clearForm();
-  render();
-  showStatus("Project deleted successfully.", "success");
-}
-
-function updateFormState() {
-  const hasValues = [els.projNumber.value, els.projName.value, els.projPath.value].some((value) => value.trim());
-  els.updateBtn.disabled = state.editIndex < 0;
-  els.clearBtn.disabled = !hasValues && state.editIndex < 0;
 }
 
 function toggleSort(field) {

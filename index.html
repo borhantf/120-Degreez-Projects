@@ -88,36 +88,6 @@
       </div>
       <div id="projectList" class="project-list" aria-live="polite"></div>
     </section>
-
-    <section class="editor">
-      <div class="panel-header">
-        <div>
-          <h2>Project Editor</h2>
-          <p class="panel-copy">Add, update, or remove projects from the offline working copy.</p>
-        </div>
-        <span id="editModeText" class="mode-badge">Add Mode</span>
-      </div>
-      <div class="form-grid">
-        <label>
-          <span>Project Number</span>
-          <input id="projNumber" class="field" type="text" autocomplete="off">
-        </label>
-        <label>
-          <span>Project Name</span>
-          <input id="projName" class="field" type="text" autocomplete="off">
-        </label>
-        <label class="full-width">
-          <span>Project Path or URL</span>
-          <input id="projPath" class="field" type="text" autocomplete="off">
-        </label>
-      </div>
-      <div class="actions">
-        <button id="addBtn" class="btn" type="button">Add Project</button>
-        <button id="updateBtn" class="btn blue" type="button" disabled>Update</button>
-        <button id="clearBtn" class="btn subtle" type="button">Clear</button>
-      </div>
-      <p id="statusMsg" class="status" hidden></p>
-    </section>
   </div>
 
   <template id="projectRowTemplate">
@@ -131,13 +101,12 @@
         <p class="project-path"></p>
       </div>
       <div class="row-actions">
-        <button class="btn small open-btn" type="button">Open</button>
         <button class="btn subtle small copy-btn" type="button">Copy</button>
-        <button class="btn subtle small edit-btn" type="button">Edit</button>
-        <button class="btn warn small delete-btn" type="button">Delete</button>
       </div>
     </article>
   </template>
+
+  <p id="statusMsg" class="status global-status" hidden></p>
 
   <script src="./app.js" defer></script>
 </body>

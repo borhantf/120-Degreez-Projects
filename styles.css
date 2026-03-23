@@ -59,7 +59,6 @@ input {
 .header,
 .toolbar,
 .list-panel,
-.editor,
 .note-banner {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -169,7 +168,6 @@ input {
 }
 
 .button-row,
-.actions,
 .row-actions {
   display: flex;
   flex-wrap: wrap;
@@ -328,42 +326,17 @@ input {
   color: var(--muted);
 }
 
-.editor {
-  margin-top: 14px;
-  padding: 16px;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: start;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.form-grid label span {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-.full-width {
-  grid-column: 1 / -1;
-}
-
 .status {
   margin: 12px 0 0;
   padding: 12px 14px;
   border-radius: 14px;
   background: var(--panel-strong);
   border: 1px solid var(--line);
+}
+
+.global-status {
+  width: min(1100px, 100%);
+  margin: 14px auto 0;
 }
 
 .status.success {
@@ -380,8 +353,7 @@ input {
 
 @media (max-width: 860px) {
   .dashboard,
-  .toolbar,
-  .form-grid {
+  .toolbar {
     grid-template-columns: 1fr;
   }
 
@@ -397,7 +369,6 @@ input {
     grid-column: 1 / -1;
   }
 
-  .panel-header,
   .meta {
     flex-direction: column;
     align-items: flex-start;
