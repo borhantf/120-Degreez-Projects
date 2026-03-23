@@ -1,6 +1,7 @@
 const STORAGE_KEY = "120-degreez-pwa-data-v1";
 const PREFS_KEY = "120-degreez-pwa-prefs-v1";
-const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1bK1rReW07p2nCorcAOsQM3FQappKEwy6mqnZBZdwhH0/export?format=csv&gid=840894697";
+const GOOGLE_SHEET_ID = "1bK1rReW07p2nCorcAOsQM3FQappKEwy6mqnZBZdwhH0";
+const GOOGLE_SHEET_GID = "840894697";
 
 const state = {
   allProjects: [],
@@ -226,31 +227,8 @@ async function syncFromGoogleSheet(options = {}) {
 
   try {
     showStatus("Loading projects from Google Sheets...", "warn");
-    const response = await fetch(GOOGLE_SHEET_URL, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`Google Sheets returned ${response.status}`);
-    }
-
-    const text = await response.text();
-    const rows = parseCsv(text);
-    const projects = [];
-
-    for (let i = 1; i < rows.length; i += 1) {
-      const row = rows[i];
-      if (!row || row.length < 3) {
-        continue;
-      }
-
-      const number = String(row[0] || "").trim();
-      const name = String(row[1] || "").trim();
-      const path = String(row[2] || "").trim();
-
-      if (!number && !name && !path) {
-        continue;
-      }
-
-      projects.push({ number, name, path });
-    }
+    const rows = await loadGoogleSheetRows();
+    const projects = rowsToProjects(rows);
 
     state.allProjects = projects;
     state.selectedIndex = -1;
@@ -271,6 +249,59 @@ async function syncFromGoogleSheet(options = {}) {
       );
     }
   }
+}
+
+function loadGoogleSheetRows() {
+  return new Promise((resolve, reject) => {
+    const callbackName = `sheetQuery_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const script = document.createElement("script");
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("Google Sheets request timed out"));
+    }, 15000);
+
+    function cleanup() {
+      window.clearTimeout(timeout);
+      delete window[callbackName];
+      script.remove();
+    }
+
+    window[callbackName] = (response) => {
+      try {
+        cleanup();
+        const table = response?.table;
+        if (!table || !Array.isArray(table.rows)) {
+          reject(new Error("Invalid Google Sheets response"));
+          return;
+        }
+
+        const rows = table.rows.map((row) => (
+          (row.c || []).map((cell) => (cell && cell.v != null ? String(cell.v) : ""))
+        ));
+        resolve(rows);
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Unable to load Google Sheets script"));
+    };
+    script.src = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?gid=${GOOGLE_SHEET_GID}&headers=1&tqx=responseHandler:${callbackName}`;
+    document.body.appendChild(script);
+  });
+}
+
+function rowsToProjects(rows) {
+  return rows
+    .filter((row) => row.length >= 3)
+    .map((row) => ({
+      number: String(row[0] || "").trim(),
+      name: String(row[1] || "").trim(),
+      path: String(row[2] || "").trim(),
+    }))
+    .filter((project) => project.number || project.name || project.path);
 }
 
 function exportCsv(items, label) {

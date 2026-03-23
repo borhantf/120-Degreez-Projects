@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#d90445" />
-      <stop offset="100%" stop-color="#ff8e6b" />
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="120" fill="url(#bg)" />
-  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="184" font-weight="700" fill="#ffffff">120</text>
+  <rect width="512" height="512" rx="118" fill="#ef003f" />
+  <g transform="translate(40 166)">
+    <path d="M24 8h54v164H24z" fill="#fff"/>
+    <path d="M0 32V8h78v40H40v124H0V32z" fill="#fff"/>
+    <path d="M96 8h116c27 0 42 16 42 42v15c0 13-5 22-14 28 9 6 14 15 14 28v15c0 26-15 42-42 42H96v-40h104c7 0 10-3 10-10v-15c0-7-3-10-10-10H96V68h104c7 0 10-3 10-10V43c0-7-3-10-10-10H96V8z" fill="#fff"/>
+    <rect x="238" y="8" width="122" height="164" rx="22" fill="#fff"/>
+    <rect x="267" y="44" width="64" height="92" rx="10" fill="#ef003f"/>
+    <circle cx="299" cy="90" r="7" fill="#fff"/>
+    <path d="M382 8h92c23 0 32 30 13 43l-59 41 58 39c21 14 11 47-14 47h-90v-25l73-53-73-1V78h63l-63-1V8z" fill="#111"/>
+  </g>
 </svg>

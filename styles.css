@@ -76,13 +76,9 @@ input {
 .brand-mark {
   width: 88px;
   height: 88px;
-  display: grid;
-  place-items: center;
   border-radius: 26px;
-  background: linear-gradient(135deg, var(--brand), #ff8e6b);
-  color: #fff;
-  font-size: 1.8rem;
-  font-weight: 800;
+  object-fit: cover;
+  display: block;
 }
 
 .eyebrow,
