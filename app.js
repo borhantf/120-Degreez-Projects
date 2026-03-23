@@ -1,6 +1,6 @@
 const STORAGE_KEY = "120-degreez-pwa-data-v1";
 const PREFS_KEY = "120-degreez-pwa-prefs-v1";
-const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1bK1rReW07p2nCorcAOsQM3FQappKEwy6mqnZBZdwhH0/export?format=csv&gid=0";
+const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1bK1rReW07p2nCorcAOsQM3FQappKEwy6mqnZBZdwhH0/export?format=csv&gid=840894697";
 
 const state = {
   allProjects: [],
