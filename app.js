@@ -93,6 +93,14 @@ function bindEvents() {
   document.querySelectorAll("[data-sort]").forEach((button) => {
     button.addEventListener("click", () => toggleSort(button.dataset.sort));
   });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      syncFromGoogleSheet({ silentOnFailure: true });
+    }
+  });
+  window.addEventListener("focus", () => {
+    syncFromGoogleSheet({ silentOnFailure: true });
+  });
 }
 
 function loadPrefs() {
