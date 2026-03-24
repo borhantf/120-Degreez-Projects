@@ -60,8 +60,7 @@ input {
 
 .header,
 .toolbar,
-.list-panel,
-.note-banner {
+.list-panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -103,8 +102,7 @@ input {
 
 .company-line,
 .card-sub,
-.project-path,
-.note-banner {
+.project-path {
   color: var(--muted);
 }
 
@@ -116,38 +114,38 @@ input {
 .dashboard {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin: 10px 0 8px;
+  gap: 5px;
+  margin: 8px 0 6px;
 }
 
 .card {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 10px 12px;
+  padding: 7px 8px;
   box-shadow: var(--shadow);
 }
 
 .card-value {
   display: block;
-  margin-top: 5px;
-  font-size: 1.05rem;
+  margin-top: 2px;
+  font-size: 0.9rem;
   line-height: 1.05;
   overflow-wrap: anywhere;
 }
 
 .card-sub {
   display: block;
-  margin-top: 4px;
-  font-size: 0.76rem;
+  margin-top: 1px;
+  font-size: 0.65rem;
   line-height: 1.2;
 }
 
 .toolbar {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 8px;
+  padding: 10px 12px;
   overflow: hidden;
 }
 
@@ -191,7 +189,7 @@ input {
 .toggle-btn {
   border: 0;
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 6px 9px;
   cursor: pointer;
   background: var(--brand);
   color: #fff;
@@ -234,7 +232,7 @@ input {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  margin: 6px 0 8px;
+  margin: 4px 0 6px;
   color: var(--muted);
 }
 
@@ -247,13 +245,6 @@ input {
   border: 1px solid var(--line);
   font-size: 0.74rem;
   font-weight: 700;
-}
-
-.note-banner {
-  padding: 11px 12px;
-  margin-bottom: 10px;
-  font-size: 0.84rem;
-  line-height: 1.34;
 }
 
 .list-panel {
@@ -387,6 +378,25 @@ input {
 }
 
 @media (max-width: 640px) {
+  html,
+  body {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body {
+    overscroll-behavior: none;
+  }
+
+  .app-shell {
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    gap: 6px;
+    padding: calc(env(safe-area-inset-top) + 8px) 10px calc(env(safe-area-inset-bottom) + 10px);
+    overflow: hidden;
+  }
+
   .header {
     grid-template-columns: 64px minmax(0, 1fr);
     gap: 10px;
@@ -420,7 +430,7 @@ input {
   .dashboard {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
+    gap: 4px;
     margin: 0;
     overflow: visible;
     padding-bottom: 0;
@@ -428,23 +438,23 @@ input {
 
   .card {
     min-width: 0;
-    min-height: 62px;
-    padding: 7px 8px;
+    min-height: 54px;
+    padding: 6px 7px;
   }
 
   .card-value {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     margin-top: 2px;
   }
 
   .card-sub {
-    font-size: 0.62rem;
+    font-size: 0.56rem;
     margin-top: 2px;
   }
 
   .toolbar {
-    gap: 8px;
-    padding: 10px;
+    gap: 6px;
+    padding: 9px 10px;
   }
 
   #searchBox {
@@ -454,20 +464,24 @@ input {
   }
 
   .button-row {
-    flex-wrap: wrap;
-    gap: 6px;
-    overflow: visible;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
+    overflow: hidden;
     padding-bottom: 0;
   }
 
   .btn,
   .toggle-btn,
   .file-btn {
-    min-height: 32px;
-    padding: 6px 9px;
-    font-size: 0.72rem;
+    min-height: 28px;
+    padding: 5px 2px;
+    font-size: 0.52rem;
     white-space: nowrap;
-    flex: 0 1 auto;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    flex: initial;
   }
 
   .meta {
@@ -478,10 +492,22 @@ input {
     font-size: 0.7rem;
   }
 
+  .list-panel {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-list {
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .project-row {
     grid-template-columns: 36px minmax(0, 1fr) auto;
     gap: 8px;
-    padding: 10px 11px;
+    padding: 9px 10px;
     align-items: center;
   }
 
@@ -512,10 +538,10 @@ input {
   }
 
   .btn.small {
-    min-width: 58px;
-    min-height: 28px;
-    padding: 5px 8px;
-    font-size: 0.74rem;
+    min-width: 54px;
+    min-height: 26px;
+    padding: 4px 7px;
+    font-size: 0.68rem;
   }
 }
 
@@ -544,24 +570,24 @@ input {
   }
 
   .card {
-    padding: 6px 7px;
-    min-height: 58px;
+    padding: 5px 6px;
+    min-height: 52px;
   }
 
   .card-value {
-    font-size: 0.74rem;
+    font-size: 0.68rem;
   }
 
   .card-sub,
   .card-label {
-    font-size: 0.58rem;
+    font-size: 0.52rem;
   }
 
   .btn,
   .toggle-btn,
   .file-btn {
-    font-size: 0.68rem;
-    padding: 6px 8px;
+    font-size: 0.5rem;
+    padding: 4px 2px;
   }
 
   .project-row {
