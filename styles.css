@@ -245,6 +245,10 @@ input {
   border: 1px solid var(--line);
   font-size: 0.74rem;
   font-weight: 700;
+  max-width: 52%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .list-panel {
@@ -332,6 +336,14 @@ input {
   font-size: 0.78rem;
   line-height: 1.25;
   word-break: break-word;
+}
+
+.hl {
+  background: rgba(217, 4, 69, 0.14);
+  color: var(--brand);
+  border-radius: 4px;
+  padding: 0 2px;
+  font-weight: 700;
 }
 
 .empty-state {
@@ -459,7 +471,7 @@ input {
 
   #searchBox {
     min-height: 38px;
-    font-size: 0.82rem;
+    font-size: 16px;
     padding: 7px 30px 7px 10px;
   }
 
@@ -490,6 +502,7 @@ input {
 
   .pill {
     font-size: 0.7rem;
+    max-width: 48%;
   }
 
   .list-panel {
@@ -589,6 +602,10 @@ input {
   .file-btn {
     font-size: 0.47rem;
     padding: 4px 2px;
+  }
+
+  .pill {
+    max-width: 44%;
   }
 
   .project-row {

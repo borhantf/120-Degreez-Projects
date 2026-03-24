@@ -72,7 +72,7 @@ function bindEvents() {
     state.darkMode = !state.darkMode;
     savePrefs();
     applyTheme();
-    showStatus(state.darkMode ? "Dark mode enabled." : "Light mode enabled.", "success");
+    showStatus(state.darkMode ? "Light mode enabled." : "Dark mode enabled.", "success");
   });
   els.syncSheetBtn.addEventListener("click", () => syncFromGoogleSheet());
   els.csvInput.addEventListener("change", importCsvFromFile);
@@ -136,7 +136,7 @@ function saveProjects() {
 
 function applyTheme() {
   document.body.classList.toggle("dark", state.darkMode);
-  els.themeBtn.textContent = state.darkMode ? "Light Mode" : "Dark Mode";
+  els.themeBtn.textContent = state.darkMode ? "Light Mode" : "Theme";
   els.favOnlyBtn.classList.toggle("active", state.favoritesOnly);
 }
 
@@ -209,7 +209,7 @@ function importCsvFromFile(event) {
     state.selectedIndex = -1;
     saveProjects();
     render();
-    showStatus(`Imported ${projects.length} projects from CSV.`, "success");
+    showStatus(`Imported ${projects.length} projects.`, "success");
     els.csvInput.value = "";
   };
   reader.readAsText(file);
@@ -226,19 +226,13 @@ async function syncFromGoogleSheet(options = {}) {
     state.selectedIndex = -1;
     saveProjects();
     render();
-    showStatus(`Synced ${projects.length} projects from Google Sheets.`, "success");
+    showStatus(`Synced ${projects.length} projects.`, "success");
   } catch (error) {
     console.warn("Google Sheets sync failed", error);
     if (!silentOnFailure) {
-      showStatus(
-        "Could not load Google Sheets. Make sure the sheet is shared for viewing and the first tab has Project Number, Project Name, and Project Path columns.",
-        "error"
-      );
+      showStatus("Could not load Google Sheets.", "error");
     } else if (!state.allProjects.length) {
-      showStatus(
-        "Google Sheets sync is ready, but the sheet must allow viewer access before the iPhone can load it.",
-        "warn"
-      );
+      showStatus("Google Sheets sync is ready, but no data loaded yet.", "warn");
     }
   }
 }
@@ -375,6 +369,37 @@ function fuzzyScore(project, query) {
   }, 0);
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightText(value, query) {
+  const safe = escapeHtml(value);
+  const trimmed = String(query || "").trim();
+  if (!trimmed) {
+    return safe;
+  }
+
+  const parts = trimmed.split(/\s+/).filter(Boolean).map((part) => escapeRegex(part));
+  if (!parts.length) {
+    return safe;
+  }
+
+  try {
+    return safe.replace(new RegExp(`(${parts.join("|")})`, "ig"), '<span class="hl">$1</span>');
+  } catch (error) {
+    return safe;
+  }
+}
+
 function render() {
   state.currentItems = filteredProjects();
   renderList();
@@ -384,15 +409,17 @@ function render() {
 
 function renderList() {
   els.projectList.innerHTML = "";
+  const query = els.searchBox.value.trim();
   els.projectCount.textContent = `${state.currentItems.length} project${state.currentItems.length === 1 ? "" : "s"}`;
   els.recentPill.textContent = state.recentProjects[0] ? `Recent: ${state.recentProjects[0]}` : "Ready";
+  els.recentPill.title = state.recentProjects[0] || "Ready";
 
   if (!state.currentItems.length) {
     const empty = document.createElement("div");
     empty.className = "empty-state";
     empty.textContent = state.allProjects.length
       ? "No matching project found."
-      : "No projects loaded yet. Tap Sync Google Sheet to load your shared project list.";
+      : "No projects loaded yet.";
     els.projectList.appendChild(empty);
     return;
   }
@@ -406,9 +433,9 @@ function renderList() {
     const copyBtn = node.querySelector(".copy-btn");
 
     node.classList.toggle("selected", filteredIndex === state.selectedIndex);
-    node.querySelector(".project-number").textContent = project.number;
-    node.querySelector(".project-name").textContent = project.name;
-    node.querySelector(".project-path").textContent = project.path;
+    node.querySelector(".project-number").innerHTML = highlightText(project.number, query);
+    node.querySelector(".project-name").innerHTML = highlightText(project.name, query);
+    node.querySelector(".project-path").innerHTML = highlightText(project.path, query);
 
     favoriteBtn.textContent = state.favorites[key] ? "★" : "☆";
     favoriteBtn.addEventListener("click", (event) => {
