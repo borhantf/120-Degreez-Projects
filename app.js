@@ -476,11 +476,40 @@ function rememberRecent(project) {
 
 async function copyText(text, successMessage = "Copied to clipboard.") {
   try {
-    await navigator.clipboard.writeText(text);
+    if (navigator.clipboard && window.ClipboardItem) {
+      const item = new ClipboardItem({
+        "text/plain": new Blob([text], { type: "text/plain" }),
+      });
+      await navigator.clipboard.write([item]);
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      legacyCopyText(text);
+    }
     showStatus(successMessage, "success");
   } catch (error) {
-    showStatus("Clipboard access failed on this device.", "warn");
+    try {
+      legacyCopyText(text);
+      showStatus(successMessage, "success");
+    } catch (fallbackError) {
+      showStatus("Clipboard access failed on this device.", "warn");
+    }
   }
+}
+
+function legacyCopyText(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.top = "-9999px";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  document.execCommand("copy");
+  textarea.remove();
 }
 
 function toggleSort(field) {
